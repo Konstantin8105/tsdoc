@@ -63,7 +63,13 @@ import (
 
 var separator string = string(filepath.Separator)
 
-// Get return documentation from Go source with triple-slash. For example:
+// Get return documentation from Go source with triple-slash.
+//
+// Variable `path` is folder name with Go source code.
+// Variable `deep`. If true, then search triplet-slash documentation in internal
+// foladers.
+//
+// For example:
 //
 //		func add(a, b int) (int, error) {
 //			/// Function `add` return summ of two positive integer values.
@@ -73,6 +79,11 @@ var separator string = string(filepath.Separator)
 //			}
 //			return a + b, nil
 //		}
+//
+// Return:
+//
+//		Function `add` return summ of two positive integer values.
+//		If some of value is negative, then return the error.
 //
 func Get(path string, deep bool) (doc string, err error) {
 	defer func() {
