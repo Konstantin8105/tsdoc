@@ -1,18 +1,30 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/Konstantin8105/tsdoc)](https://goreportcard.com/report/github.com/Konstantin8105/tsdoc)
+[![GoDoc](https://godoc.org/github.com/Konstantin8105/tsdoc?status.svg)](https://godoc.org/github.com/Konstantin8105/tsdoc)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+
  # Triplet-splash
 
  Get documentation from Go source
 
+ ## Installation
+
+```
+ go get -u github.com/Konstantin8105/tsdoc
+ cd $GOPATH/Konstantin8105/tsdoc/cmd
+ go install
+```
+
  Example Go source with triplet-slash:
 ```go
-		func add(a, b int) (int, error) {
-			/// Function `add` return summ of two positive integer values.
-			///
-			if a < 0 || b < 0 {
-				/// If some of value is negative, then return the error.
-				return -1, fmt.Errorf("Some value is negative")
-			}
-			return a + b, nil
-		}
+func add(a, b int) (int, error) {
+	/// Function `add` return summ of two positive integer values.
+	///
+	if a < 0 || b < 0 {
+		/// If some of value is negative, then return the error.
+		return -1, fmt.Errorf("Some value is negative")
+	}
+	return a + b, nil
+}
 ```
 
 Output:
@@ -21,6 +33,14 @@ Output:
  Function `add` return summ of two positive integer values.
 
  If some of value is negative, then return the error.
+```
+
+ ## Example of generation README.md on linux
+
+ Insert into your Go code:
+
+```go
+//go:generate sh -c "tsdoc > README.md"
 ```
 
  ## Function Get
