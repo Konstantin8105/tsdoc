@@ -66,8 +66,9 @@ var separator string = string(filepath.Separator)
 // Get return documentation from Go source with triple-slash.
 //
 // Variable `path` is folder name with Go source code.
+//
 // Variable `deep`. If true, then search triplet-slash documentation in internal
-// foladers.
+// folders.
 //
 // For example:
 //
