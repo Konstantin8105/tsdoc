@@ -14,7 +14,8 @@
 			return a + b, nil
 		}
 ```
-	Output:
+
+Output:
 
 ```
  Function `add` return summ of two positive integer values.

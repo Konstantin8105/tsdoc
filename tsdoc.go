@@ -52,7 +52,8 @@ func Get(path string, deep bool) (doc string, err error) {
 	///			return a + b, nil
 	///		}
 	///```
-	///	Output:
+	///
+	///Output:
 	///
 	///```
 	/// Function `add` return summ of two positive integer values.
