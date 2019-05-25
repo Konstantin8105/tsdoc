@@ -4,12 +4,17 @@ package tsdoc
 import (
 	"bytes"
 	"fmt"
+	"github.com/Konstantin8105/errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 )
+
+//go:generate go run cmd/main.go > README.md
+
+var separator string = string(filepath.Separator)
 
 // Get return documentation from Go source with triple-slash. For example:
 //
@@ -23,6 +28,14 @@ import (
 //		}
 //
 func Get(path string, deep bool) (doc string, err error) {
+	defer func() {
+		if err != nil {
+			et := errors.New("TSDOC")
+			et.Add(fmt.Errorf("Error with input data: %v %v", path, deep))
+			et.Add(err)
+			err = et
+		}
+	}()
 	/// # Triplet-splash
 	///
 	/// Get documentation from Go source
@@ -30,13 +43,14 @@ func Get(path string, deep bool) (doc string, err error) {
 	/// ## Function Get
 	/// Function Get search all Go files in `path` and go deeper by folders.
 	{
-		path, err = filepath.Abs(path)
+		var apath string
+		apath, err = filepath.Abs(path)
 		if err != nil {
 			/// If cannot find absolute path, then return error.
-			return
+			return "", fmt.Errorf("Cannot get absolute path: %v", err)
 		}
 		var st os.FileInfo
-		st, err = os.Stat(path)
+		st, err = os.Stat(apath)
 		if os.IsNotExist(err) {
 			/// If `path` is not exist, then return error.
 			err = fmt.Errorf("Cannot find: `%s`", path)
@@ -81,7 +95,7 @@ func Get(path string, deep bool) (doc string, err error) {
 					}
 					if name := f.Name(); strings.HasSuffix(name, ".go") {
 						/// Searching only Go files.
-						files = append(files, name)
+						files = append(files, folder+separator+name)
 					}
 				}
 			}
@@ -110,7 +124,7 @@ func Get(path string, deep bool) (doc string, err error) {
 		content, err = ioutil.ReadFile(filename)
 		if err != nil {
 			/// If cannot read a file content, then return the error.
-			return
+			return "", fmt.Errorf("Cannot read file content: %v", filename)
 		}
 		/// Read file line by line.
 		lines := bytes.Split(content, []byte("\n"))
