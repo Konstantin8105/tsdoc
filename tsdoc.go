@@ -54,11 +54,11 @@ func Get(path string, deep bool) (doc string, err error) {
 	///```
 	///	Output:
 	///
-	/// ```
+	///```
 	/// Function `add` return summ of two positive integer values.
 	///
 	/// If some of value is negative, then return the error.
-	/// ```
+	///```
 	///
 	/// ## Function Get
 	/// Function Get search all Go files in `path` and go deeper by folders.
