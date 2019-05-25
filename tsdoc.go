@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-//go:generate go run cmd/main.go > README.md
+//go:generate sh -c "go run cmd/main.go > README.md"
 
 var separator string = string(filepath.Separator)
 
