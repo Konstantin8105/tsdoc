@@ -42,6 +42,7 @@ func Get(path string, deep bool) (doc string, err error) {
 	///
 	/// ## Function Get
 	/// Function Get search all Go files in `path` and go deeper by folders.
+	///
 	{
 		var apath string
 		apath, err = filepath.Abs(path)
@@ -66,16 +67,20 @@ func Get(path string, deep bool) (doc string, err error) {
 	var files []string
 	{
 		/// List of ignore folders: vendor, .git
+		///
 		ignore := []string{"vendor", ".git"}
 		/// Searching run from folder `path`.
+		///
 		folderList := []string{path}
 		/// For avoid infinite loop added limits of search iterations(cycles).
+		///
 		for iter := 0; iter < 1000000; iter++ {
 			findFolders := []string{}
 			for _, folder := range folderList {
 				fileInfo, err := ioutil.ReadDir(folder)
 				if err != nil {
 					/// If cannot read directory, then return error.
+					///
 					return "", fmt.Errorf("Cannot read dir `%s`: %v", folder, err)
 				}
 				for _, f := range fileInfo {
@@ -95,6 +100,7 @@ func Get(path string, deep bool) (doc string, err error) {
 					}
 					if name := f.Name(); strings.HasSuffix(name, ".go") {
 						/// Searching only Go files.
+						///
 						files = append(files, folder+separator+name)
 					}
 				}
@@ -107,26 +113,39 @@ func Get(path string, deep bool) (doc string, err error) {
 	}
 
 	if len(files) == 0 {
+		///
 		/// If cannot find any acceptable files, then return error.
+		///
 		return "", fmt.Errorf("Cannot find any files")
 	}
 
+	///
 	/// ## Sorting.
+	///
 	/// Before reading all files, start a sorting of filename.
+	///
 	/// For example: at the begin read a file with name `complex.go`,
 	/// then read file `complex_test.go`.
+	///
 	sort.Strings(files)
 
+	///
 	/// ## Read all files.
+	///
 	/// Reading files one by one.
+	///
 	for _, filename := range files {
 		var content []byte
 		content, err = ioutil.ReadFile(filename)
 		if err != nil {
+			///
 			/// If cannot read a file content, then return the error.
+			///
 			return "", fmt.Errorf("Cannot read file content: %v", filename)
 		}
+		///
 		/// Read file line by line.
+		///
 		lines := bytes.Split(content, []byte("\n"))
 		for i := range lines {
 			line := lines[i]
@@ -137,8 +156,10 @@ func Get(path string, deep bool) (doc string, err error) {
 				continue
 			}
 			if index > 0 {
+				///
 				/// Before triplet-slash is not acceptable any characters,
 				/// except `\t` or space.
+				///
 				isAcceptableLine := true
 				for pos := 0; pos < index; pos++ {
 					if !(line[pos] == ' ' || line[pos] == '\t') {
