@@ -40,6 +40,26 @@ func Get(path string, deep bool) (doc string, err error) {
 	///
 	/// Get documentation from Go source
 	///
+	/// Example Go source with triplet-slash:
+	///```go
+	///		func add(a, b int) (int, error) {
+	///			/// Function `add` return summ of two positive integer values.
+	///			///
+	///			if a < 0 || b < 0 {
+	///				/// If some of value is negative, then return the error.
+	///				return -1, fmt.Errorf("Some value is negative")
+	///			}
+	///			return a + b, nil
+	///		}
+	///```
+	///	Output:
+	///
+	/// ```
+	/// Function `add` return summ of two positive integer values.
+	///
+	/// If some of value is negative, then return the error.
+	/// ```
+	///
 	/// ## Function Get
 	/// Function Get search all Go files in `path` and go deeper by folders.
 	///
@@ -53,25 +73,32 @@ func Get(path string, deep bool) (doc string, err error) {
 		var st os.FileInfo
 		st, err = os.Stat(apath)
 		if os.IsNotExist(err) {
+			///
 			/// If `path` is not exist, then return error.
-			err = fmt.Errorf("Cannot find: `%s`", path)
-			return
+			///
+			return "", fmt.Errorf("Cannot find: `%s`", path)
 		}
 		if !st.IsDir() {
+			///
 			/// If `path` is not the folder, then return error.
-			err = fmt.Errorf("Is not a folder: `%s`", path)
-			return
+			///
+			return "", fmt.Errorf("Is not a folder: `%s`", path)
 		}
 	}
+	///
 	/// ## Searching.
+	///
 	var files []string
 	{
+		///
 		/// List of ignore folders: vendor, .git
 		///
 		ignore := []string{"vendor", ".git"}
+		///
 		/// Searching run from folder `path`.
 		///
 		folderList := []string{path}
+		///
 		/// For avoid infinite loop added limits of search iterations(cycles).
 		///
 		for iter := 0; iter < 1000000; iter++ {
@@ -79,6 +106,7 @@ func Get(path string, deep bool) (doc string, err error) {
 			for _, folder := range folderList {
 				fileInfo, err := ioutil.ReadDir(folder)
 				if err != nil {
+					///
 					/// If cannot read directory, then return error.
 					///
 					return "", fmt.Errorf("Cannot read dir `%s`: %v", folder, err)
@@ -99,6 +127,7 @@ func Get(path string, deep bool) (doc string, err error) {
 						continue
 					}
 					if name := f.Name(); strings.HasSuffix(name, ".go") {
+						///
 						/// Searching only Go files.
 						///
 						files = append(files, folder+separator+name)
